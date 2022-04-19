@@ -30,19 +30,39 @@ router.post('/drones/create', (req, res, next) => {
   })
 });
 
-router.get('/drones/:id/edit', (req, res, next) => {
-  // Iteration #4: Update the drone
-  // ... your code here
+router.get("/drones/:id/edit", (req, res, next) => {
+  Drone.findById(req.params.id)
+    .then(function (foundDrone) {
+      res.render("drones/update-form", { drone: foundDrone });
+    })
+    .catch(function (error) {
+      console.log("Something went wrong", error.message);
+    });
+
 });
 
-router.post('/drones/:id/edit', (req, res, next) => {
-  // Iteration #4: Update the drone
-  // ... your code here
+router.post("/drones/:id/edit", (req, res, next) => {
+  Drone.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    propellers: req.body.propellers,
+    maxSpeed: req.body.maxSpeed,
+  })
+    .then(function () {
+      res.redirect("/drones");
+    })
+    .catch(function (err) {
+      console.log("Something went wrong", err.message);
+    });
 });
 
-router.post('/drones/:id/delete', (req, res, next) => {
-  // Iteration #5: Delete the drone
-  // ... your code here
+router.post("/drones/:id/delete", (req, res, next) => {
+  Drone.findByIdAndRemove(req.params.id)
+    .then(function () {
+      res.redirect("/drones");
+    })
+    .catch(function (err) {
+      console.log("Something went wrong", err.message);
+    });
 });
 
 module.exports = router;
